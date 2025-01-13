@@ -1,2 +1,2 @@
 # flood
-A dam building simulator
+A dam building simulator built in Google Earth Engine. 
