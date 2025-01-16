@@ -1,8 +1,8 @@
 // TODO
 // - fix texts (dear citizen etc.)
-// - fix so progress bar
+// - remake progress bar to flood level meter
 // - fix restart
-
+// - hide bottom modal on big modal
 
 // ------- Configuration variables ------- 
 
@@ -537,7 +537,7 @@ function start_building_process() {
             if (currentIndex < waterLevels.length().getInfo()) {
                 
                 // Create a progress bar with a 500ms interval and 20 steps
-                updateProgressBar(10,3000, 10);
+                //updateProgressBar(10,3000, 10);
 
                 // Introduce a small delay (e.g., 1000 ms = 1 second) before showing the next layer
                 ui.util.setTimeout(addFloodLayerWithDelay, fadeInDuration);
