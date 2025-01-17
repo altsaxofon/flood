@@ -1,20 +1,18 @@
-// TODO
-// - fix texts (dear citizen etc.)
-// - remake progress bar to flood level meter
-// - fix restart
-// - hide bottom modal on big modal
-
 // ------- Configuration variables ------- 
 
 var mapType = 'TERRAIN'; // Can be 'SATELLITE', 'HYBRID', 'ROADMAP', etc.
+
 var damRadius = 3000; // Radius of the dam in meters
 var damHeight = 30; // Maximum flood height in meters
-var animationSteps = 5; // Number of animation steps for flood layers
-var fadeInDuration = 3000; // Pause between steps in milliseconds
+
+var animationSteps = 8; // Number of animation steps for flood layers
+var stepDelay = 2000; // Pause between steps in milliseconds
 var floodLayerOpacity = 0.7; // Opacity of each flood layer
 var floodColor = 'A1D8EB'; // Flood color
-var sampleBufferRadius = 1000;
-var sampleRegion = false;
+
+var sampleRegion = false; // Sample point or region
+var sampleBufferRadius = 1000; // Radius of sample region
+
 
 // ------- Working variables ------- 
 
@@ -30,20 +28,22 @@ var progressPanel = null;
 var currentProgress = 0; // Track the current progress
 var maxProgress = 100; // Define the maximum progress value
 
-var fontSize = '20px';
-var fontSizeMobile = '18px';
-var initZoomLevel = 13;
-var initZoomLevelMobile = 10;
-
+var fontSize = '18px';
 
 // ------- Text ---------
 var letterTitle = "Dear Citizen";
 
-var introText = ["We are pleased to welcome you to this platform.","Please take a moment to identify and select your address on the map.","This will allow us to provide accurate, location-specific information regarding forthcoming developments in your area. Thank you for your participation!"];
-var buildText = ["We are sorry to inform you that you live within the area designated for the development of a hydro power dam reservoir essential to our renewable energy capabilities","As a result, your property will be subject to repurposing and eventual submersion.","We understand that this decision may have a significant impact on your life. Measures are in place to provide support during this transition, including financial compensation and relocation assistance.","Thank you for your attention."];
-var endText = "Thank you for your patience and understanding throughout this process.We hope you have settled into your new home and begun to adapt to your new surroundings. While we recognize the disruption caused by this transition, it is our belief that the sacrifices made today will pave the way for a brighter, more sustainable future for all. The hydro power dam reservoir now stands as a testament to progress and resilience, providing energy, opportunity, and stability for countless citizens. Your contribution has been invaluable in making this vision a reality. We extend our gratitude for your cooperation.";
-
-
+var introText = [
+    "Welcome to the information platform.",
+    "Please take a moment to select your home address on the map.",
+    "This will allow us to provide information regarding upcoming developments in your area.",
+    "Thank you for your participation!"
+];
+var buildText = [
+    "We regret to inform you that your property is located in an area designated for a hydropower dam.",
+    "As a result, your property will be subject to expropriation and submersion.",
+    "Remember, this hydropower dam is essential for enhancing our renewable energy capabilities, and we thank you for your cooperation."
+];
 
 // ------- Initialize map ------- 
 
@@ -124,23 +124,24 @@ function createModal(message, buttonLabel, buttonAction) {
             position: 'top-center',
             width: '100%',
             height: '100%',
-            color: '000000'
+            color: '000000',
         }
     });
     // Centered panel for text and button
     var centeredPanel = ui.Panel({
         widgets: [
             ui.Label(letterTitle, {
-                fontSize: isDesktop ? '24px' : '12px',
+                fontSize: '24px',
                 color: '000000',
                 textAlign: 'center',
-                margin: '0 0 0 0'
+                margin: '0 0 0 0',
+
             })
         ]
         .concat( // Add the labels dynamically
             message.map(function (msg) {
                 return ui.Label(msg, {
-                    fontSize: isDesktop ? '18px' : '9px',
+                    fontSize: fontSize,
                     color: '000000',
                     textAlign: 'left',
                     margin: '30px 0 0 0 '
@@ -152,7 +153,7 @@ function createModal(message, buttonLabel, buttonAction) {
                 label: buttonLabel,
                 imageUrl: "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsrounded/check/default/48px.svg",
     
-                style: { height: '50px', stretch: 'both', margin: '40px 0 20px 0 ' },
+                style: { height: '50px', stretch: 'none', margin: '40px auto 20px auto ',  backgroundColor : '#aadaee'},
                 onClick: function () {
                     // Remove the overlay when the button is clicked
                     Map.remove(overlay);
@@ -168,7 +169,9 @@ function createModal(message, buttonLabel, buttonAction) {
             backgroundColor: 'FFFFFF', // White with slight opacity
             width: '400px',
             textAlign: 'center',
-            margin: '10% 0 0 0 '
+            margin: '10% 0 0 0 ',
+            border : '5px solid #f0bb5f'
+
         }
     });
 
@@ -189,7 +192,7 @@ function createBottomPanel(text, buttonIcon, buttonAction){
     // Bottom panel with the label
     bottomPanel = ui.Panel({
         widgets: [ui.Label(text, {
-            fontSize: '20px',
+            fontSize: fontSize,
             color: '000000',
             textAlign: 'center',
             position: 'middle-left'
@@ -197,14 +200,15 @@ function createBottomPanel(text, buttonIcon, buttonAction){
         layout: ui.Panel.Layout.flow('horizontal'),
         style: {
             position: 'bottom-center',
-            padding: '20px',
+            padding: '8px',
             textAlign: 'center',
         }
     });
     if (buttonIcon !== null) {
         var button = ui.Button({
             imageUrl: "https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsrounded/" + buttonIcon + "/default/48px.svg",
-            style: { fontSize: '20px' },
+            style: { fontSize: '20px', margin: '2px 10px 0px 0px', backgroundColor : '#aadaee'},
+           
             onClick: buttonAction
         });
         bottomPanel.add(button);
@@ -217,7 +221,7 @@ function createBottomPanel(text, buttonIcon, buttonAction){
 }
 // ------- Progress Bar Implementation -------
 
-// Create a single-pixel image with a specified color (e.g., red)
+// Create a single-pixel image with a specified color
 
 // Function to create the progress bar
 function createProgressBar(initialValue, maxValue) {
@@ -227,7 +231,7 @@ function createProgressBar(initialValue, maxValue) {
 
     // Create the progress thumbnail
     progressThumbnail = ui.Thumbnail({
-        image: ee.Image([109, 127, 202]).toByte(), // Example progress bar color
+        image: ee.Image([109, 127, 202]).toByte(), // PÅrogress bar color R, G ,B
         params: {
             dimensions: '1x1', // Start with 1x1 pixel
             format: 'png'
@@ -236,66 +240,62 @@ function createProgressBar(initialValue, maxValue) {
             height: (currentProgress / maxProgress) * 280 + 'px', // Scale height to current progress
             width: '40px', // Fixed width
             padding: '0',
-            position: 'top-left'
+            position: 'bottom-left',
+            margin: (280 - (currentProgress / maxProgress) * 280) + 'px 0 0 0', // Adjust top margin dynamically
+
         }
     });
 
     // Create the progress panel
+    var meterMax= ui.Panel({
+        widgets: [ui.Label(damHeight + 'm', { fontSize: fontSize, color: '000000', textAlign: 'center' }),],
+        layout: ui.Panel.Layout.flow('vertical'),
+        style: {
+            position: 'middle-right', // Position the panel at the middle-right of the map
+            padding: '6px',
+            width: '68px', // Fixed width
+            textAlign: 'center'
+
+        }
+    });
+    var meterMin= ui.Panel({
+        widgets: [ui.Label('   0m', { fontSize: fontSize, color: '000000', textAlign: 'center' }),],
+        layout: ui.Panel.Layout.flow('vertical'),
+        style: {
+            position: 'middle-right', // Position the panel at the middle-right of the map
+            padding: '6px',
+            width: '68px', // Fixed width
+            textAlign: 'center'
+        }
+    });
     progressPanel = ui.Panel({
         widgets: [
-            ui.Label(maxValue + 'm', { fontSize: '24px', color: '000000', textAlign: 'center' }),
             progressThumbnail,
-            ui.Label('0m', { fontSize: '24px', color: '000000', textAlign: 'center' })
         ],
         layout: ui.Panel.Layout.flow('vertical'),
         style: {
             position: 'middle-right', // Position the panel at the middle-right of the map
             height: '312px',
-            padding: '6px',
+            padding: '14px',
         }
     });
 
     // Add the panel to the map
+    Map.add(meterMax);
     Map.add(progressPanel);
+    Map.add(meterMin)
+
 }
-
 // Function to update the progress bar
-function updateProgressBar(newValue, duration, steps) {
-    // Calculate the target height based on the new progress value
-    var targetProgress = ee.Number(newValue).clamp(0, maxProgress); // Ensure it's within range
-    var targetHeight = targetProgress.divide(maxProgress).multiply(280); // Scale to max height (280px)
+function updateProgressBar(newValue) {
+    // Ensure newValue is within the range [0, 100]
+    currentProgress = newValue;
+    var targetHeight = (newValue/100)*280; // Scale to max height (280px)
 
-    // Determine the change in progress and the height increment
-    var progressIncrement = targetProgress.subtract(currentProgress).divide(steps);
-    var heightIncrement = targetHeight.subtract(
-        ee.Number(currentProgress).divide(maxProgress).multiply(280)
-    ).divide(steps);
-
-    var currentStep = 0; // Track the current step
-
-    // Function to animate each step
-    function animateStep() {
-        // Increment the progress and height
-        currentProgress = currentProgress + progressIncrement.getInfo();
-        var currentHeight = parseFloat(progressThumbnail.style().get('height')) + heightIncrement.getInfo();
-
-        // Update the thumbnail height
-        progressThumbnail.style().set('height', currentHeight + 'px');
-
-        currentStep++;
-
-        // Continue the animation if not finished
-        if (currentStep < steps) {
-            ui.util.setTimeout(animateStep, duration / steps);
-        } else {
-            // Ensure the final height is accurate
-            progressThumbnail.style().set('height', targetHeight.getInfo() + 'px');
-            currentProgress = targetProgress.getInfo(); // Update current progress
-        }
-    }
-
-    // Start the animation
-    animateStep();
+    // Update the height of the progress bar
+    var marginTop = (280 - (currentProgress / maxProgress) * 280) + 'px  0 0 0'
+    progressThumbnail.style().set('height', targetHeight + 'px')
+    progressThumbnail.style().set('margin', marginTop);
 }
 
 // ------- Usage -------
@@ -309,14 +309,19 @@ function start_building_process() {
     Map.setCenter(0, 0, 2); // World view, zoomed out
     Map.setControlVisibility(false);
     isBuilding = false;
-
+    currentIndex = 0;
+    isBuilding = false;
+    marker = null;
+    transparentOverlay = null;
+    bottomPanel = null;
+    
     // Example usage of the overlay
     createModal(
         introText,
         'Ok',
         function () {
             print('Starting simulation...');
-            createBottomPanel("Select your location of residence by clicking on the map" , function () {
+            createBottomPanel("Select your location of residence by clicking on the map" , null, function () {
                 print('Starting simulation...');
             });
 
@@ -363,6 +368,10 @@ function start_building_process() {
             // Create a bottom panel 
             createBottomPanel("Selected location", 'check', function () {
 
+            if (bottomPanel !== null) {
+                Map.remove(bottomPanel);
+            }
+
             createModal(
               buildText,
               'Ok',
@@ -379,14 +388,26 @@ function start_building_process() {
                 Map.remove(marker);
             }
 
-            
-            var center = ee.Geometry.Point([coords.lon, coords.lat]);
-
-            // Create a new marker at the selected location
-            marker = Map.addLayer(center);
-
-            // Center the map on the new location and zoom in
-            Map.centerObject(center, 13);
+                      
+          // Define the center point using the provided coordinates
+          var center = ee.Geometry.Point([coords.lon, coords.lat]);
+          
+          // Create a larger red circle to act as the marker
+          marker = center.buffer(100);
+          
+          // Define the style for the marker (red fill and border)
+          var markerStyle = {
+            color: '#e39f28', // Border color
+            fillColor: '#e39f28', // Fill color
+            width: 2, // Border width
+            opacity: 1 // Transparency of the marker
+          };
+          
+          // Add the marker to the map with the desired style
+          Map.addLayer(marker, markerStyle, 'Marker');
+          
+          // Center the map on the new location and zoom in
+          Map.centerObject(center, 13);
 
         }
 
@@ -400,14 +421,14 @@ function start_building_process() {
 
     function build_dam_wall(center, dam_radius) {
 
-        createBottomPanel("Building dam wall");
+        createBottomPanel("Building dam wall", null);
         var dam_wall_boundary = center.buffer(damRadius + 70);
         var dam_outline = ee.Image().byte().paint({
             featureCollection: ee.FeatureCollection([ee.Feature(dam_wall_boundary)]),
             color: 0,
             width: 10 // Set the border width to 5 pixels
         }).visualize({
-            palette: ['FFFFFF'], // Red color
+            palette: ['e39f28'], // Dam wall color
             opacity: 1.0 // Full opacity for the border
         });
         Map.addLayer(dam_outline, {}, 'Dam Outline');
@@ -485,7 +506,7 @@ function start_building_process() {
           }
           
           // Convert the median elevation to an ee.Image for use in further calculations
-          var localElevation = ee.Image.constant(medianElevation);
+          localElevation = ee.Image.constant(medianElevation);
           
                     
         }
@@ -523,7 +544,6 @@ function start_building_process() {
 
             if (currentLayer != null) {
                 currentLayer.setShown(true);
-                createBottomPanel("Flooded Area at Water Level: " + level.getInfo() + 'm');
             }
 
             // Add the flood layer to the map
@@ -533,17 +553,24 @@ function start_building_process() {
             // Move to the next layer
             currentIndex++;
 
+            var percent = (100/(animationSteps))*(currentIndex-1)
+            updateProgressBar(percent);
+            if( currentIndex == 2){
+              
+              createBottomPanel("Flooding area", null);
+
+              
+            }
             // If we haven't reached the last water level, continue the process with a delay
             if (currentIndex < waterLevels.length().getInfo()) {
                 
-                // Create a progress bar with a 500ms interval and 20 steps
-                //updateProgressBar(10,3000, 10);
+                // Update the progress bar
 
                 // Introduce a small delay (e.g., 1000 ms = 1 second) before showing the next layer
-                ui.util.setTimeout(addFloodLayerWithDelay, fadeInDuration);
+                ui.util.setTimeout(addFloodLayerWithDelay, stepDelay);
 
             } else {
-
+                
                 createBottomPanel("Flood simulation completed", 'refresh', function () {
                     start_building_process();
                 });
