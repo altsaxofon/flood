@@ -6,7 +6,7 @@ var damRadius = 3000; // Radius of the dam in meters
 var damHeight = 30; // Maximum flood height in meters
 
 var animationSteps = 8; // Number of animation steps for flood layers
-var stepDelay = 2000; // Pause between steps in milliseconds
+var stepDelay = 3000; // Pause between steps in milliseconds
 var floodLayerOpacity = 0.7; // Opacity of each flood layer
 var floodColor = 'A1D8EB'; // Flood color
 
@@ -404,7 +404,7 @@ function start_building_process() {
           };
           
           // Add the marker to the map with the desired style
-          Map.addLayer(marker, markerStyle, 'Marker');
+          marker = Map.addLayer(marker, markerStyle, 'Marker');
           
           // Center the map on the new location and zoom in
           Map.centerObject(center, 13);
@@ -422,7 +422,7 @@ function start_building_process() {
     function build_dam_wall(center, dam_radius) {
 
         createBottomPanel("Building dam wall", null);
-        var dam_wall_boundary = center.buffer(damRadius + 70);
+        var dam_wall_boundary = center.buffer(damRadius + 50);
         var dam_outline = ee.Image().byte().paint({
             featureCollection: ee.FeatureCollection([ee.Feature(dam_wall_boundary)]),
             color: 0,
@@ -582,7 +582,7 @@ function start_building_process() {
         }
 
         // Start the process
-        addFloodLayerWithDelay();
+        ui.util.setTimeout(addFloodLayerWithDelay, stepDelay);
     }
 
 }
@@ -592,4 +592,3 @@ function start_building_process() {
 
 
 start_building_process();
-
