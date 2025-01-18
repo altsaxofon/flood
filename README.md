@@ -30,8 +30,3 @@ This tool seeks to challenge the prevailing discourse surrounding hydropower by 
 - **Elevation Data**: [ASTER Global Digital Elevation Model (GDEM) v3](https://gee-community-catalog.org/projects/aster/)
 - **Media Review**: [Svenska Tidningar from the Swedish National Library](https://tidningar.kb.se/)
 
-
-A dam building simulator built in google earth engine. 
-Built in 2025 as part of an critical intervention as part of the course *Critical Theory and Digital Transformation* at Linneus University
-
-
