@@ -27,8 +27,8 @@ This tool seeks to challenge the prevailing discourse surrounding hydropower by 
    [Flood Web App](https://ee-erik-arnell-flood.projects.earthengine.app/view/flood)
 
 ## Data Sources
-- **Elevation Data**: Sourced from publicly available geospatial datasets.
-- **Media Review**: Python scripts scraping Swedish news data to visualize hydropower discourse.
+- **Elevation Data**: [ASTER Global Digital Elevation Model (GDEM) v3](https://gee-community-catalog.org/projects/aster/)
+- **Media Review**: [Svenska Tidningar from the Swedish National Library](https://tidningar.kb.se/)
 
 
 A dam building simulator built in google earth engine. 
