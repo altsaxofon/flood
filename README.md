@@ -13,7 +13,7 @@ The **Flood** project is a web-based intervention designed to visualize the impa
 [See the code in google Earth engine](https://code.earthengine.google.com/36f9359f7bc882e4e8dfc316382bcb74)
 
 ## Purpose
-This tool seeks to challenge the prevailing discourse surrounding hydropower by using a personal and visceral approach to mapping. It aims to engage users in a deeper reflection on the cost vs. benefits of hydropower from an individualized perspective, considering both environmental and cultural consequences. 
+This tool seeks to challenge the prevailing narratives of hydropower by using a personal and visceral approach to mapping. It aims to engage users in a deeper reflection on the cost vs. benefits of hydropower from an individualized perspective, considering both environmental and cultural consequences. 
 
 ## Features
 - **Dam Simulator**: Users can input their address and simulate the flooding caused by a hydropower dam, with the water level rising gradually.
