@@ -113,7 +113,7 @@ var styles = {
 };
 
 Map.setOptions(mapType, styles); // Set the map type to satellite
-
+Map.style().set('cursor', 'crosshair')
 // Function to create the full-screen overlay
 function createModal(message, buttonLabel, buttonAction) {
     // Full-screen semi-transparent black panel
