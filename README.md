@@ -16,7 +16,7 @@ This tool seeks to challenge the prevailing narratives of hydropower by using a 
 
 ## Features
 - **Dam Simulator**: Users can input their address and simulate the flooding caused by a hydropower dam, with the water level rising gradually.
-- **Geospatial Data**: Uses real-world elevation data to visualize flooding based on real-world dam reservoir sizes, inspired by the Akkajaure reservoir in Sweden.
+- **Geospatial Data**: Uses real-world elevation data to visualize flooding based on real-world dam reservoir sizes modeled after the Akkajaure reservoir in Sweden.
 - **Visualization**: Displays a series of progressive maps showing the land disappearing under rising water levels.
 
 ## Technologies Used
