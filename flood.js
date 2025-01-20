@@ -5,8 +5,8 @@ var mapType = 'TERRAIN'; // Can be 'SATELLITE', 'HYBRID', 'ROADMAP', etc.
 var damRadius = 3000; // Radius of the dam in meters
 var damHeight = 30; // Maximum flood height in meters
 
-var animationSteps = 8; // Number of animation steps for flood layers
-var stepDelay = 3000; // Pause between steps in milliseconds
+var animationSteps = 12; // Number of animation steps for flood layers
+var stepDelay = 1500; // Pause between steps in milliseconds
 var floodLayerOpacity = 0.7; // Opacity of each flood layer
 var floodColor = 'A1D8EB'; // Flood color
 
@@ -29,6 +29,7 @@ var currentProgress = 0; // Track the current progress
 var maxProgress = 100; // Define the maximum progress value
 
 var fontSize = '18px';
+var initZoomLevel = 13;
 
 // ------- Text ---------
 var letterTitle = "Dear Citizen";
@@ -44,6 +45,24 @@ var buildText = [
     "As a result, your property will be subject to expropriation and submersion.",
     "Remember, this hydropower dam is essential for enhancing our renewable energy capabilities, and we thank you for your cooperation."
 ];
+// Check if mobile and change font ans zoom acordingly
+function configLayout(deviceInfo) {
+  print(deviceInfo)
+  if (!deviceInfo.is_desktop || deviceInfo.width < 900) {
+    print("mobile");
+    fontSize = '14px';
+    initZoomLevel = 12;
+
+    print("fontSize "+fontSize)
+ 
+  } else {
+
+    print("desktop");
+
+  }
+}
+ui.root.onResize(ui.util.debounce(configLayout, 100));
+
 
 // ------- Initialize map ------- 
 
@@ -114,6 +133,7 @@ var styles = {
 
 Map.setOptions(mapType, styles); // Set the map type to satellite
 Map.style().set('cursor', 'crosshair')
+
 // Function to create the full-screen overlay
 function createModal(message, buttonLabel, buttonAction) {
     // Full-screen semi-transparent black panel
@@ -306,7 +326,7 @@ function start_building_process() {
     Map.clear();
     
     Map.setOptions(mapType, styles); // Set the map type to satellite
-    Map.setCenter(0, 0, 2); // World view, zoomed out
+    // Map.setCenter(0, 0, 2); // World view, zoomed out
     Map.setControlVisibility(false);
     isBuilding = false;
     currentIndex = 0;
@@ -314,6 +334,13 @@ function start_building_process() {
     marker = null;
     transparentOverlay = null;
     bottomPanel = null;
+    
+    // Set the position of the user if possible 
+    ui.util.getCurrentPosition(position_sucess, position_error)	
+    
+    function position_sucess(point){  Map.centerObject(point, 8);  }
+    function position_error(){   Map.setCenter(0, 0, 2);  }
+
     
     // Example usage of the overlay
     createModal(
@@ -407,7 +434,7 @@ function start_building_process() {
           marker = Map.addLayer(marker, markerStyle, 'Marker');
           
           // Center the map on the new location and zoom in
-          Map.centerObject(center, 13);
+          Map.centerObject(center, initZoomLevel);
 
         }
 
