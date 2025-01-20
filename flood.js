@@ -30,6 +30,8 @@ var maxProgress = 100; // Define the maximum progress value
 
 var fontSize = '18px';
 var initZoomLevel = 13;
+var dam_border = 10;
+var progress_sizes = ['40px','68px','6px','14px'];
 
 // ------- Text ---------
 var letterTitle = "Dear Citizen";
@@ -49,12 +51,14 @@ var buildText = [
 function configLayout(deviceInfo) {
   print(deviceInfo)
   if (!deviceInfo.is_desktop || deviceInfo.width < 900) {
-    print("mobile");
+    
+    // --- Set mobile sizes ---
+    
     fontSize = '14px';
     initZoomLevel = 12;
+    dam_border = 10;
+    progress_sizes = ['29px','43px','1px','7px'];
 
-    print("fontSize "+fontSize)
- 
   } else {
 
     print("desktop");
@@ -75,7 +79,7 @@ var progressColor = ee.Image([109, 127, 202]).toByte(); // Red color (RGB)
     },
     style: {
       height: '0px',
-      width: '40px', // Start with 0 width
+      width: progress_sizes[0], // Start with 0 width
       padding: '0',
       position: 'bottom-left'
     }
@@ -258,8 +262,8 @@ function createProgressBar(initialValue, maxValue) {
         },
         style: {
             height: (currentProgress / maxProgress) * 280 + 'px', // Scale height to current progress
-            width: '40px', // Fixed width
-            padding: '0',
+            width: progress_sizes[0], // Fixed width
+            padding: 0,
             position: 'bottom-left',
             margin: (280 - (currentProgress / maxProgress) * 280) + 'px 0 0 0', // Adjust top margin dynamically
 
@@ -268,23 +272,23 @@ function createProgressBar(initialValue, maxValue) {
 
     // Create the progress panel
     var meterMax= ui.Panel({
-        widgets: [ui.Label(damHeight + 'm', { fontSize: fontSize, color: '000000', textAlign: 'center' }),],
+        widgets: [ui.Label(damHeight + 'm', { fontSize: fontSize, color: '000000', textAlign: 'center', padding: '0px', margin:'0px'}),],
         layout: ui.Panel.Layout.flow('vertical'),
         style: {
             position: 'middle-right', // Position the panel at the middle-right of the map
-            padding: '6px',
-            width: '68px', // Fixed width
+            padding: progress_sizes[3],
+            width: progress_sizes[1], // Fixed width
             textAlign: 'center'
 
         }
     });
     var meterMin= ui.Panel({
-        widgets: [ui.Label('   0m', { fontSize: fontSize, color: '000000', textAlign: 'center' }),],
+        widgets: [ui.Label('   0m', { fontSize: fontSize, color: '000000', textAlign: 'center', padding:'0', margin: '0px' }),],
         layout: ui.Panel.Layout.flow('vertical'),
         style: {
             position: 'middle-right', // Position the panel at the middle-right of the map
-            padding: '6px',
-            width: '68px', // Fixed width
+            padding: progress_sizes[3],
+            width: progress_sizes[1], // Fixed width
             textAlign: 'center'
         }
     });
@@ -296,7 +300,7 @@ function createProgressBar(initialValue, maxValue) {
         style: {
             position: 'middle-right', // Position the panel at the middle-right of the map
             height: '312px',
-            padding: '14px',
+            padding: progress_sizes[3],
         }
     });
 
@@ -453,7 +457,7 @@ function start_building_process() {
         var dam_outline = ee.Image().byte().paint({
             featureCollection: ee.FeatureCollection([ee.Feature(dam_wall_boundary)]),
             color: 0,
-            width: 10 // Set the border width to 5 pixels
+            width: dam_border // Set the border width to 5 pixels
         }).visualize({
             palette: ['e39f28'], // Dam wall color
             opacity: 1.0 // Full opacity for the border
