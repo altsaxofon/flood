@@ -5,7 +5,7 @@
 </div>
 
 ## Overview
-The **Flood** project is a web-based intervention designed to visualize the impact of hydropower dam constructions. Users can input their home address to see how the construction of a hydropower dam would effect the area, simulating the gradual rise of water. The tool is written in Javascript for the Google Earth Engine (GEE) for geospatial analysisor.
+The **Flood** project is a web-based intervention designed to visualize the impact of hydropower dam constructions. Users can input their home address to see how the construction of a hydropower dam would effect the area, simulating the gradual rise of water. The tool is written in Javascript for the Google Earth Engine (GEE) geospatial analysisor.
 
 ## How to Use
 [Test the simulator in Google Earth engine](https://ee-erik-arnell-flood.projects.earthengine.app/view/flood)<br />
